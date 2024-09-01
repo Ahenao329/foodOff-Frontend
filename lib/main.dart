@@ -26,12 +26,12 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
   }
-  
 
   @override
   Widget build(BuildContext context) {
       print('Usuario de sesión: ${clienteSesion.id}');
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Food Off',
       initialRoute: clienteSesion.id != null ? '/home':'/', //todo: significa entonces
       getPages: [

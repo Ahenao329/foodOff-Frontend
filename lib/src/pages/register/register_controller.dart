@@ -21,7 +21,7 @@ class RegisterController extends GetxController {
 
   ClienteProvider clienteProvaider = ClienteProvider();
 
-  ImagePicker picker = ImagePicker();
+  final ImagePicker picker = ImagePicker();
   File? imageFile;
 
   void register() async {
@@ -42,24 +42,24 @@ class RegisterController extends GetxController {
         password: password,
       );
 
-      Stream stream = await clienteProvaider.createWithImage(cliente, imageFile!);
+      // Stream stream = await clienteProvaider.createWithImage(cliente, imageFile!);
+      // ResponseApi response = await clienteProvaider.createUserWithImageGetX(cliente, imageFile!);
+      Stream stream = await clienteProvaider.createUser(cliente, );
 
       stream.listen((res) {
         ResponseApi responseApi = ResponseApi.fromJson(json.decode(res));
 
         if(responseApi.ok == true) {
-          GetStorage().write('user', responseApi.data); //Datos del usuario en sesion
+          GetStorage().write('cliente', responseApi.data); //Datos del usuario en sesion
           goToHomePage();
         }
         else {
-          Get.snackbar('Registto fallido', responseApi.msg ?? '');
+          Get.snackbar('Registto fallido', responseApi.msg ?? 'lamentable');
         }
       });
-      // Response response = await clienteProvaider.create(cliente); //todo otra maenera
     }
-    // Get.snackbar('Email', email);
-    // Get.snackbar('Password', password);
   }
+
 
   void goToHomePage() {
     Get.offNamedUntil('/home', (route) => false); // offName.. para que no pueda regresar, si regresa se sale de la app
@@ -113,10 +113,10 @@ class RegisterController extends GetxController {
       return false;
     }
  
-    if (imageFile == null) {
-      Get.snackbar('Formulacio no válido', 'debes selecicnar una imagen de perfil');
-      return false;
-    }
+    // if (imageFile == null) {
+    //   Get.snackbar('Formulacio no válido', 'debes selecicnar una imagen de perfil');
+    //   return false;
+    // }
 
     return true;
   }

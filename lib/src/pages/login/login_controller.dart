@@ -15,27 +15,28 @@ class LoginController extends GetxController {
     Get.toNamed('/register');
   }
 
-  void login () async {
-      String email = emailController.text.trim();
-      String password = passwordController.text.trim();
+  void login() async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
 
-      if ( isValidForm(email, password) ) {
+    if (isValidForm(email, password)) {
+      try {
+        ResponseApi responseApi = await clienteProvaider.login(email, password);
 
-        ResponseApi responseApi = await clienteProvaider.login(email, password); 
-        
         print('Response Api ${responseApi.toJson()}');
 
-      if(responseApi.ok == true) {
-
-        GetStorage().write('user', responseApi.data); //Datos del usuario en sesion
-        goToHomePage();
-        // Get.snackbar('Login exitoso', responseApi.msg ?? '');//todo ?? para saber si no viene vacio averiguar por //? 
-      }
-      else {
-        Get.snackbar('Login inválido', responseApi.msg ?? '');
+        if (responseApi.ok == true) {
+          GetStorage().write('user', responseApi.data); // Guardar datos del usuario en sesión
+          goToHomePage();
+        } else {
+          Get.snackbar('Login inválido', responseApi.msg ?? 'Error desconocido');
+        }
+      } catch (e) {
+        Get.snackbar('Error', 'No se pudo conectar al servidor. Inténtalo de nuevo.');
       }
     }
   }
+
 
   void goToHomePage() {
     Get.offNamedUntil('/home', (route) => false); // offName.. para que no pueda regresar, si regresa se sale de la app

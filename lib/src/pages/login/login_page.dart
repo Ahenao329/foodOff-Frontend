@@ -7,8 +7,6 @@ class LoginPage extends StatelessWidget {
 
   LoginController loginController = Get.put(LoginController());
 
-  
-
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -42,7 +40,7 @@ class LoginPage extends StatelessWidget {
   
   Widget _textAppName() {
     return const Text(
-      'Delivery Mysql',
+      'FoodOff Delivery',
       style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
@@ -143,7 +141,7 @@ class LoginPage extends StatelessWidget {
   Widget _imageCover() {
     return SafeArea(
       child:  Container(
-        margin:EdgeInsets.only(top: 20, bottom: 15),
+        margin: const EdgeInsets.only(top: 20, bottom: 15),
         alignment: Alignment.center,
         child: Image.asset(
           'assets/img/delivery.png',
@@ -155,8 +153,6 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _textDontHaveAccount() {
-
-  
     return  Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
@@ -12,22 +11,6 @@ class ClienteProvider extends GetConnect {
 
   String url = '${Environment.API_URL}api';
 
-  Future<Response> create(Cliente cliente) async {
-    Response response = await post(
-       '$url/clientes',
-       cliente.toJson(),
-
-    );
-    return response;
-  }
-
-  // create(Cliente cliente) async { //todo tambien funciona
-  //   var response = await post(
-  //      url,
-  //      cliente.toJson(),
-  //   );
-  //   return response;
-  // }
 
   Future<ResponseApi> login(String email, String password) async {
     Response response = await post(
@@ -36,8 +19,7 @@ class ClienteProvider extends GetConnect {
           'correo': email,
           'password': password
         }
-
-    ); // espera a que el servidor nos retorne la respuesta
+    ); 
 
     if (response.body == null) {
       Get.snackbar('Error', 'No se pudo ejecutar la petición');
@@ -49,10 +31,21 @@ class ClienteProvider extends GetConnect {
     return responseApi;
   }
 
+  Future<Stream> createUser(Cliente cliente) async {
+    Uri uri = Uri.http(Environment.API_URL_OLD, '/api/clientes');
+    final request = http.Request('POST', uri);
 
+    request.headers['Content-Type'] = 'application/json';
+    request.body = json.encode(cliente.toJson());
+
+    // print('Enviando cliente: ${json.encode(cliente.toJson())}');
+
+    final response = await request.send();
+    return response.stream.transform(utf8.decoder);
+  }
 
   Future<Stream> createWithImage(Cliente cliente, File image) async {
-    Uri uri = Uri.http(Environment.API_URL_OLD, '/api/clientes/crearConImagen');
+    Uri uri = Uri.http(Environment.API_URL_OLD, '/api/clientes/creeearConImagen');
     final request = http.MultipartRequest('POST', uri);
     request.files.add(http.MultipartFile(
       'image',
@@ -60,20 +53,21 @@ class ClienteProvider extends GetConnect {
       await image.length(),
       filename: basename(image.path)
     ));
-    request.fields['user'] = json.encode(cliente);
+    request.fields['cliente'] = json.encode(cliente);
+
     final response = await request.send();
     return response.stream.transform(utf8.decoder);
   }
 
   /*
   * GET X
-   */
+  //  */
   Future<ResponseApi> createUserWithImageGetX(Cliente cliente, File image) async { //todo: con Get ex
     FormData form = FormData({
       'image': MultipartFile(image, filename: basename(image.path)),
-      'user': json.encode(cliente)  /* * GET X */
+      'cliente': json.encode(cliente)  /* * GET X */
     });
-    Response response = await post('$url/clientes/createWithImage', form);
+    Response response = await post('$url/clientes/crearConImagen', form);
 
     if (response.body == null) {
       Get.snackbar('Error en la peticion', 'No se pudo crear el usuario');
@@ -82,7 +76,5 @@ class ClienteProvider extends GetConnect {
     ResponseApi responseApi = ResponseApi.fromJson(response.body);
     return responseApi;
   }
-
-
 
 }
